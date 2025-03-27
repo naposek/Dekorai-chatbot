@@ -1,0 +1,410 @@
+/**
+ * DecoChat DekorAI - Simplified Elegant Design
+ *
+ * Clean, minimal chat interface styling
+ *
+ * @package DecoChat_DekorAI
+ */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* Container */
+.decochat-container {
+    font-family: 'Poppins', sans-serif;
+    max-width: 380px;
+    width: 100%;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    z-index: 99999;
+    background-color: #fff;
+    transition: all 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+    height: 500px; /* Fixed height */
+}
+
+.decochat-container.decochat-minimized {
+    transform: translateY(calc(100% - 60px));
+}
+
+/* Header */
+.decochat-header {
+    padding: 16px 20px;
+    background-color: #8a2be2;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.decochat-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.decochat-status {
+    display: none;
+}
+
+.decochat-header-actions {
+    display: none;
+}
+
+/* Messages Container */
+.decochat-messages {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: auto !important; /* Override inline height */
+    max-height: calc(100% - 110px); /* Account for header and input */
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Style scrollbar for WebKit browsers */
+.decochat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.decochat-messages::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+.decochat-messages::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+/* Message Bubbles */
+.decochat-user-message,
+.decochat-assistant-message {
+    max-width: 85%;
+}
+
+.decochat-user-message {
+    align-self: flex-end;
+}
+
+.decochat-assistant-message {
+    align-self: flex-start;
+}
+
+.decochat-message-content {
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.decochat-user-message .decochat-message-content {
+    background-color: #4a4c60;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.decochat-assistant-message .decochat-message-content {
+    background-color: #ffffff;
+    color: #333;
+    border: 1px solid #eaeaea;
+    border-bottom-left-radius: 4px;
+}
+
+/* Input Area */
+.decochat-input {
+    display: flex;
+    padding: 12px;
+    border-top: 1px solid #eaeaea;
+    background-color: white;
+    align-items: center;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.decochat-textarea {
+    flex: 1;
+    border: 1px solid #eaeaea;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+    font-family: inherit;
+    background-color: #f9f9f9;
+    min-height: 20px; /* Minimum height */
+}
+
+.decochat-textarea:focus {
+    border-color: #8a2be2;
+    background-color: #fff;
+}
+
+.decochat-send-btn {
+    background-color: #8a2be2;
+    border: none;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important; /* Ensure minimum width */
+    min-height: 36px !important; /* Ensure minimum height */
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 8px;
+    flex-shrink: 0;
+    padding: 0 !important;
+}
+
+.decochat-send-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    display: block; /* Ensure proper display */
+}
+
+/* Reset button styling */
+.decochat-reset-btn {
+    border: none;
+    background: none;
+    width: 36px;
+    height: 36px;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+}
+
+.decochat-reset-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    color: #555;
+    display: block; /* Ensure proper display */
+}
+
+.decochat-reset-btn:hover {
+    opacity: 1;
+}
+
+/* Alternative icon as fallback */
+.decochat-icon-fallback {
+    font-size: 18px;
+    line-height: 1;
+    display: none; /* Hidden by default */
+}
+
+/* Typing Indicator */
+.decochat-typing {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #ffffff;
+    border: 1px solid #eaeaea;
+    border-radius: 18px;
+    border-bottom-left-radius: 4px;
+}
+
+.decochat-typing-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #8a2be2;
+    border-radius: 50%;
+    margin: 0 2px;
+    animation: typing 1.4s infinite ease-in-out both;
+}
+
+.decochat-typing-dot:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.decochat-typing-dot:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes typing {
+    0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+/* Chat Toggle Button */
+.decochat-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #8a2be2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 99998;
+}
+
+.decochat-toggle svg {
+    width: 24px;
+    height: 24px;
+    color: white;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    display: block;
+}
+
+.decochat-hidden {
+    display: none;
+}
+
+/* Branding - completely removed */
+.decochat-branding {
+    display: none;
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 480px) {
+    /* When in "inline" position mode */
+    .decochat-container[style*="position: relative"] {
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 450px !important; /* Fixed height */
+        margin: 0 !important;
+        bottom: auto !important;
+        left: auto !important;
+        right: auto !important;
+    }
+    
+    /* For fixed position chatbot, use viewport positioning */
+    .decochat-container:not([style*="position: relative"]) {
+        width: calc(100% - 20px) !important;
+        right: 10px;
+        bottom: 10px;
+        height: 400px; /* Slightly smaller height for mobile */
+        max-height: 80vh; /* Prevent it from being too tall on small screens */
+    }
+    
+    /* General mobile adjustments */
+    .decochat-messages {
+        padding: 15px;
+    }
+    
+    .decochat-toggle {
+        right: 10px;
+        bottom: 10px;
+        width: 50px;
+        height: 50px;
+    }
+    
+    .decochat-header {
+        padding: 12px 16px;
+    }
+    
+    .decochat-input {
+        padding: 8px;
+    }
+    
+    .decochat-textarea {
+        padding: 8px 12px;
+        font-size: 16px; /* Better size for mobile typing */
+    }
+    
+    .decochat-send-btn svg,
+    .decochat-reset-btn svg {
+        width: 16px; /* Slightly smaller for mobile */
+        height: 16px;
+    }
+    
+    /* If SVG is not rendering, show fallback */
+    .decochat-svg-missing .decochat-send-btn svg,
+    .decochat-svg-missing .decochat-reset-btn svg {
+        display: none;
+    }
+    
+    .decochat-svg-missing .decochat-icon-fallback {
+        display: block;
+    }
+}
+
+/* For fixed position chatbots only */
+.keyboard-open .decochat-container:not([style*="position: relative"]) {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 99999 !important;
+    border-radius: 12px 12px 0 0 !important;
+    margin: 0 !important;
+}
+
+/* For inline position chatbots */
+.keyboard-open-inline .decochat-container[style*="position: relative"] {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    height: 450px !important;
+    margin: 0 !important;
+    z-index: 1 !important;
+}
+
+/* Ensure container doesn't grow beyond screen height */
+@media (max-height: 600px) {
+    .decochat-container {
+        height: 350px;
+        max-height: 80vh;
+    }
+}
+
+/* Style for mobile browsers */
+@supports (-webkit-touch-callout: none) {
+    /* iOS specific styles */
+    .decochat-container {
+        /* Prevent bouncing effect on iOS */
+        -webkit-overflow-scrolling: touch; 
+    }
+    
+    .decochat-messages {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* iOS fix for position fixed elements */
+    .keyboard-open .decochat-container:not([style*="position: relative"]) {
+        position: absolute !important;
+        top: auto !important;
+        bottom: 0 !important;
+        height: 400px !important;
+    }
+}
