@@ -1,89 +1,29 @@
-<?php
-/**
- * Shortcode Implementation for DecoChat DekorAI
- *
- * Defines and handles the [decochat] shortcode to embed the chatbot on pages and posts.
- *
- * @package DecoChat_DekorAI
- * @since 1.0.0
- */
-
-// If this file is called directly, abort.
-if ( ! defined( 'ABSPATH' ) ) {
-    exit;
-}
-
-/**
- * Register the [decochat] shortcode
- */
-function decochat_dekorai_register_shortcode() {
-    add_shortcode( 'decochat', 'decochat_dekorai_shortcode_callback' );
-}
-add_action( 'init', 'decochat_dekorai_register_shortcode' );
-
-/**
- * Shortcode callback function
- *
- * @param array $atts Shortcode attributes
- * @return string Chatbot HTML output
- */
-function decochat_dekorai_shortcode_callback( $atts ) {
-    // Get plugin options
-    $options = get_option( 'decochat_dekorai_options', array() );
-    
-    // Check if API credentials are set
-    if ( empty( $options['openai_api_key'] ) || empty( $options['assistant_id'] ) ) {
-        if ( current_user_can( 'manage_options' ) ) {
-            return '<div class="decochat-error">' . 
-                sprintf(
-                    /* translators: %s: settings page URL */
-                    __( 'DecoChat DekorAI: OpenAI API credentials are not configured. Please <a href="%s">set up your API credentials</a> to enable the chatbot.', 'decochat-dekorai' ),
-                    admin_url( 'options-general.php?page=decochat-dekorai-settings' )
-                ) . 
-                '</div>';
-        } else {
-            return '<div class="decochat-error">' . __( 'DecoChat DekorAI: The chatbot is currently unavailable.', 'decochat-dekorai' ) . '</div>';
-        }
-    }
-    
-    // Parse shortcode attributes
-    $atts = shortcode_atts(
-        array(
-            'title'  => isset( $options['chat_title'] ) ? $options['chat_title'] : __( 'Chatea con nuestro DecoChat DekorAI', 'decochat-dekorai' ),
-            'position' => 'fixed', // fixed or inline
-            'theme_color' => isset( $options['theme_color'] ) ? $options['theme_color'] : '#8a2be2', // Default theme color
-        ),
-        $atts,
-        'decochat'
-    );
-    
-    // Generate a unique ID for this chatbot instance
-    $chat_id = 'decochat-' . uniqid();
-    
-    // Start output buffering to return HTML
-    ob_start();
-    
-    // Chat toggle button (only for fixed position)
-    if ($atts['position'] === 'fixed') {
-        ?>
-        <div id="<?php echo esc_attr( $chat_id ); ?>-toggle" class="decochat-toggle" style="background-color: <?php echo esc_attr( $atts['theme_color'] ); ?>;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+15a2 2 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
         </div>
         <?php
     }
     
-    // Chat container class
+    // Chat container class and styling
     $container_class = 'decochat-container';
+    $container_style = '';
+    
     if ($atts['position'] === 'fixed') {
         $container_class .= ' decochat-hidden';
+    } else {
+        // Inline positioning
+        $container_style = 'position: relative; width: 100%; max-width: 100%;';
+        
+        // Apply custom height for inline mode
+        if (!empty($atts['height'])) {
+            $container_style .= " height: {$atts['height']};";
+        }
     }
     ?>
     <div id="<?php echo esc_attr( $chat_id ); ?>" 
          class="<?php echo esc_attr( $container_class ); ?>" 
          data-position="<?php echo esc_attr( $atts['position'] ); ?>"
-         style="<?php echo $atts['position'] !== 'fixed' ? 'position: relative; width: 100%;' : ''; ?>">
+         style="<?php echo esc_attr( $container_style ); ?>">
         
         <!-- Chat Header -->
         <div class="decochat-header" style="background-color: <?php echo esc_attr( $atts['theme_color'] ); ?>;">
@@ -176,29 +116,26 @@ function decochat_dekorai_shortcode_callback( $atts ) {
                     }
                 }, 500);
                 
-                // Only setup toggle for fixed position chat
+                // Setup toggle functionality
                 if (chatToggle) {
-                    // Show chat when toggle button is clicked
-                    chatToggle.addEventListener('click', function() {
-                        chatContainer.classList.remove('decochat-hidden');
-                        chatToggle.classList.add('decochat-hidden');
-                    });
-                    
-                    // Handle close button functionality
-                    document.addEventListener('click', function(e) {
-                        if (e.target.closest('.decochat-close-btn')) {
-                            chatContainer.classList.add('decochat-hidden');
-                            chatToggle.classList.remove('decochat-hidden');
-                        }
-                    });
-                    
-                    // Un-minimize when clicking on header
-                    const header = chatContainer.querySelector('.decochat-header');
-                    if (header) {
-                        header.addEventListener('click', function(e) {
-                            chatContainer.classList.remove('decochat-minimized');
+                    // Ensure fixed position toggle works
+                    if (positionType === 'fixed') {
+                        // Show chat when toggle button is clicked
+                        chatToggle.addEventListener('click', function() {
+                            chatContainer.classList.remove('decochat-hidden');
+                            chatToggle.classList.add('decochat-hidden');
                         });
                     }
+                }
+                
+                // Ensure inline positioning is correct
+                if (positionType === 'inline') {
+                    // Remove any fixed positioning remnants
+                    chatContainer.style.position = 'relative';
+                    chatContainer.style.width = '100%';
+                    chatContainer.style.maxWidth = '100%';
+                    chatContainer.style.boxShadow = 'none';
+                    chatContainer.style.transform = 'none';
                 }
                 
                 // Only for mobile devices
